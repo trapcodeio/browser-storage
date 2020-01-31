@@ -11,6 +11,10 @@ class WebStorage {
         } else {
             this.store = localStorage;
         }
+
+        this.namespace = namespace;
+
+        return this;
     }
 
     /**

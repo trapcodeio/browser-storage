@@ -14,6 +14,10 @@
             } else {
                 this.store = localStorage;
             }
+
+            this.namespace = namespace;
+
+            return this;
         }
 
         /**
@@ -61,6 +65,19 @@
             if (typeof value === "object")
                 value = JSON.stringify(value);
             return this.set(key, value);
+        }
+
+        /**
+         * Get True or false values
+         * @param key
+         * @returns {boolean}
+         */
+        getBoolean(key) {
+            const value = this.get(key);
+            if (value && typeof value === "string") {
+                return value.toLowerCase() === 'true';
+            }
+            return false;
         }
 
         /**
