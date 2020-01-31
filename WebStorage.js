@@ -42,7 +42,6 @@ class WebStorage {
      * @returns {WebStorage}
      */
     set(key, value) {
-
         this.store.setItem(this.n(key), value);
         return this;
     }
@@ -59,6 +58,19 @@ class WebStorage {
         if (typeof value === "object")
             value = JSON.stringify(value);
         return this.set(key, value);
+    }
+
+    /**
+     * Get True or false values
+     * @param key
+     * @returns {boolean}
+     */
+    getBoolean(key) {
+        const value = this.get(key);
+        if (value && typeof value === "string") {
+            return value.toLowerCase() === 'true';
+        }
+        return false;
     }
 
     /**
