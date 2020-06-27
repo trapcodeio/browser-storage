@@ -67,6 +67,18 @@
             return this.set(key, value);
         }
 
+
+        /**
+         * Set Array in store.
+         * Uses JSON.stringify
+         * @param key
+         * @param value
+         * @returns {WebStorage}
+         */
+        setArray(key, value) {
+            return this.setObject(key, value);
+        }
+
         /**
          * Get True or false values
          * @param key
@@ -105,6 +117,17 @@
                 return JSON.parse(value);
 
             return value;
+        }
+
+        /**
+         * Get array from store
+         * Uses JSON.parse
+         * @param key
+         * @param $default
+         * @returns {{}}
+         */
+        getArray(key, $default = undefined) {
+            return this.getObject(key, $default);
         }
 
         del(key) {
