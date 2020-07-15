@@ -76,6 +76,41 @@ class WebStorage {
         return this.setObject(key, value);
     }
 
+
+    /**
+     * Set Number item in store.
+     * Uses JSON.stringify
+     * @param key
+     * @param value
+     * @returns {WebStorage}
+     */
+    setNumber(key, value) {
+        return this.set(key, value);
+    }
+
+    /**
+     * Set Boolean item in store.
+     * Uses JSON.stringify
+     * @param key
+     * @param value
+     * @returns {WebStorage}
+     */
+    setBoolean(key, value) {
+        return this.set(key, value);
+    }
+
+    /**
+     * Get item form store
+     * @param key
+     * @param $default
+     * @returns {*}
+     */
+    get(key, $default = undefined) {
+        const value = this.store.getItem(this.n(key));
+        if (!value) return $default;
+        return value;
+    }
+
     /**
      * Get True or false values
      * @param key
@@ -90,23 +125,11 @@ class WebStorage {
     }
 
     /**
-     * Get item form store
-     * @param key
-     * @param $default
-     * @returns {string|undefined}
-     */
-    get(key, $default = undefined) {
-        const value = this.store.getItem(this.n(key));
-        if (!value) return $default;
-        return value;
-    }
-
-    /**
      * Get object from store
      * Uses JSON.parse
      * @param key
      * @param $default
-     * @returns {{}}
+     * @returns {{}|[]}
      */
     getObject(key, $default = undefined) {
         const value = this.get(key, $default);
@@ -121,13 +144,47 @@ class WebStorage {
      * Uses JSON.parse
      * @param key
      * @param $default
-     * @returns {{}}
+     * @returns {[]}
      */
     getArray(key, $default = undefined) {
         return this.getObject(key, $default);
     }
 
+
+    /**
+     * Get Number from store
+     * @param key
+     * @param $default
+     * @return {number}
+     */
+    getNumber(key, $default) {
+        let value = Number(this.get(key, $default));
+
+        if (isNaN(value)) {
+            throw Error(`Value for key: {${key}} is not a number!`)
+        }
+
+        return value;
+    }
+
+    /**
+     * Delete Item from store
+     * @param key
+     * @return {WebStorage}
+     * @deprecated - Use .remove instead
+     */
     del(key) {
+        this.store.removeItem(this.n(key));
+        return this;
+    }
+
+
+    /**
+     * Remove Item from store
+     * @param key
+     * @return {WebStorage}
+     */
+    remove(key) {
         this.store.removeItem(this.n(key));
         return this;
     }

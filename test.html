@@ -11,8 +11,18 @@
 <body>
 <h1>Browser Storage Test</h1>
 
+<script>
+    const store = BrowserStorage.getSessionStore('app');
 
+    store.setObject('object', {foo: 'bar'});
+    store.setArray('array', [1, 2, 3, 4, 5]);
+    store.setBoolean('boolean', true);
+    store.setNumber('number', 1910);
 
-
+    console.log('object:', store.getObject('object'));
+    console.log('array:', store.getArray('array'));
+    console.log('boolean:', store.getBoolean('boolean'));
+    console.log('number:', store.getNumber('number'));
+</script>
 </body>
 </html>
