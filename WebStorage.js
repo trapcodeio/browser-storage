@@ -107,7 +107,7 @@ class WebStorage {
      */
     get(key, $default = undefined) {
         const value = this.store.getItem(this.n(key));
-        if (!value) return $default;
+        if (value === null) return $default;
         return value;
     }
 
@@ -134,8 +134,11 @@ class WebStorage {
     getObject(key, $default = undefined) {
         const value = this.get(key, $default);
         if (typeof value === "string")
-            return JSON.parse(value);
-
+            try {
+                return JSON.parse(value);
+            } catch {
+                return value
+            }
         return value;
     }
 
