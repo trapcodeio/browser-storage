@@ -1,6 +1,6 @@
 {
   "name": "@trapcode/browser-storage",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "scripts": {
     "build": "rollup index.js --file browser.js --format iife"
   },
