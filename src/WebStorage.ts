@@ -1,11 +1,16 @@
+type NativeObject = Record<string | number, any>;
+
 class WebStorage {
+
+    public namespace?: string;
+    public store: Storage;
 
     /**
      * WebStorage Constructor
      * @param type
      * @param namespace
      */
-    constructor(type = "local", namespace = undefined) {
+    constructor(type = "local", namespace?: string) {
         if (type === 'session') {
             this.store = sessionStorage;
         } else {
@@ -22,7 +27,7 @@ class WebStorage {
      * @param key
      * @returns {string}
      */
-    n(key) {
+    n(key: string) {
         if (this.namespace && this.namespace.length) {
             return this.namespace + ':' + key;
         }
@@ -35,7 +40,7 @@ class WebStorage {
      * @param key
      * @returns {boolean}
      */
-    has(key) {
+    has(key: string) {
         return !!this.get(key);
     }
 
@@ -45,7 +50,7 @@ class WebStorage {
      * @param value
      * @returns {WebStorage}
      */
-    set(key, value) {
+    set(key: string, value: any) {
         this.store.setItem(this.n(key), value);
         return this;
     }
@@ -58,10 +63,13 @@ class WebStorage {
      * @param value
      * @returns {WebStorage}
      */
-    setObject(key, value) {
-        if (typeof value === "object")
-            value = JSON.stringify(value);
-        return this.set(key, value);
+    setObject(key: string, value: NativeObject) {
+        let data: any = value;
+
+        if (typeof data === "object")
+            data = JSON.stringify(data);
+
+        return this.set(key, data);
     }
 
 
@@ -72,7 +80,7 @@ class WebStorage {
      * @param value
      * @returns {WebStorage}
      */
-    setArray(key, value) {
+    setArray(key: string, value: any[]) {
         return this.setObject(key, value);
     }
 
@@ -84,7 +92,7 @@ class WebStorage {
      * @param value
      * @returns {WebStorage}
      */
-    setNumber(key, value) {
+    setNumber(key: string, value: number = 0) {
         return this.set(key, value);
     }
 
@@ -95,20 +103,20 @@ class WebStorage {
      * @param value
      * @returns {WebStorage}
      */
-    setBoolean(key, value) {
+    setBoolean(key: string, value: boolean = false) {
         return this.set(key, value);
     }
 
     /**
      * Get item form store
      * @param key
-     * @param $default
+     * @param def
      * @returns {*}
      */
-    get(key, $default = undefined) {
-        const value = this.store.getItem(this.n(key));
-        if (value === null) return $default;
-        return value;
+    get<T = any>(key: string, def?: T): T {
+        const value: any = this.store.getItem(this.n(key));
+        if (value === null) return def as T;
+        return value as T;
     }
 
     /**
@@ -116,7 +124,7 @@ class WebStorage {
      * @param key
      * @returns {boolean}
      */
-    getBoolean(key) {
+    getBoolean(key: string): boolean {
         const value = this.get(key);
         if (value && typeof value === "string") {
             return value.toLowerCase() === 'true';
@@ -128,40 +136,40 @@ class WebStorage {
      * Get object from store
      * Uses JSON.parse
      * @param key
-     * @param $default
+     * @param def
      * @returns {{}|[]}
      */
-    getObject(key, $default = undefined) {
-        const value = this.get(key, $default);
-        if (typeof value === "string")
+    getObject<T = NativeObject>(key: string, def?: T): T {
+        const value: any = this.get(key, def);
+        if (typeof value === "string") {
             try {
                 return JSON.parse(value);
             } catch {
-                return value
             }
-        return value;
+        }
+        return value as T;
     }
 
     /**
      * Get array from store
      * Uses JSON.parse
      * @param key
-     * @param $default
+     * @param def
      * @returns {[]}
      */
-    getArray(key, $default = undefined) {
-        return this.getObject(key, $default);
+    getArray<T = any[]>(key: string, def?: T): T {
+        return this.getObject(key, def);
     }
 
 
     /**
      * Get Number from store
      * @param key
-     * @param $default
+     * @param def
      * @return {number}
      */
-    getNumber(key, $default) {
-        let value = Number(this.get(key, $default));
+    getNumber(key: string, def?: any): number {
+        let value = Number(this.get(key, def));
 
         if (isNaN(value)) {
             throw Error(`Value for key: {${key}} is not a number!`)
@@ -176,7 +184,7 @@ class WebStorage {
      * @return {WebStorage}
      * @deprecated - Use .remove instead
      */
-    del(key) {
+    del(key: string) {
         this.store.removeItem(this.n(key));
         return this;
     }
@@ -187,13 +195,10 @@ class WebStorage {
      * @param key
      * @return {WebStorage}
      */
-    remove(key) {
+    remove(key: string) {
         this.store.removeItem(this.n(key));
         return this;
     }
 }
-
-WebStorage.prototype.namespace = undefined;
-WebStorage.prototype.store = undefined;
 
 export default WebStorage;

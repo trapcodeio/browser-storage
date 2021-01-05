@@ -2,11 +2,15 @@ import WebStorage from "./WebStorage"
 
 class BrowserStorage {
 
+    public namespace?: string;
+    public local: WebStorage;
+    public session: WebStorage;
+
     /**
      *  BrowserStorage constructor
      * @param {string} namespace - Namespace for keys
      */
-    constructor(namespace = undefined) {
+    constructor(namespace?: string) {
         if (namespace) {
             this.namespace = namespace;
         }
@@ -27,7 +31,7 @@ class BrowserStorage {
      *  // same as
      *  const store = new BrowserStorage();
      */
-    static new(namespace = undefined) {
+    static new(namespace?: string) {
         return new BrowserStorage(namespace)
     }
 
@@ -36,7 +40,7 @@ class BrowserStorage {
      * @param namespace
      * @returns {WebStorage}
      */
-    static getLocalStore(namespace = undefined) {
+    static getLocalStore(namespace?: string) {
         return new WebStorage('local', namespace)
     }
 
@@ -45,7 +49,7 @@ class BrowserStorage {
      * @param namespace
      * @returns {WebStorage}
      */
-    static getSessionStore(namespace = undefined) {
+    static getSessionStore(namespace?: string) {
         return new WebStorage('session', namespace)
     }
 
