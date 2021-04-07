@@ -122,9 +122,11 @@ class WebStorage {
     /**
      * Get True or false values
      * @param key
+     * @param def
      * @returns {boolean}
      */
-    getBoolean(key: string): boolean {
+    getBoolean(key: string, def: boolean = false): boolean {
+        if (!this.has(key)) return def;
         const value = this.get(key);
         if (value && typeof value === "string") {
             return value.toLowerCase() === 'true';
