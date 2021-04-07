@@ -1,6 +1,6 @@
 {
   "name": "@trapcode/browser-storage",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc && rollup ./index.js --file ./browser.js --format iife"
