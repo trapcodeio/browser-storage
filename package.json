@@ -3,7 +3,7 @@
   "version": "2.0.2",
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsc && cd dist &&  rollup ./index.js --file ./browser.js --format iife"
+    "build": "tsc && rollup ./index.js --file ./browser.js --format iife"
   },
   "description": "Support all browser storage using one Api",
   "main": "js/index.js",
