@@ -30,14 +30,15 @@ class WebStorage {
     /**
      * Enable Base64Encrypt
      */
-    enabledBase64Encryption() {
+    enableBase64Encryption(to ?: boolean) {
         try {
             if (!atob || !btoa) return this;
         } catch {
             return this;
         }
 
-        this.base64Encrypt = true;
+        this.base64Encrypt = to !== undefined ? to : true;
+
         return this;
     }
 
