@@ -14,6 +14,7 @@
 
 <script>
     const store = BrowserStorage.getSessionStore('app');
+    store.enabledBase64Encryption();
 
     store.setObject('object', {foo: 'bar'});
     store.setArray('array', [1, 2, 3, 4, 5]);

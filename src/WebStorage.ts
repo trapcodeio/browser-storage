@@ -1,9 +1,13 @@
 type NativeObject = Record<string | number, any>;
 
+const my_btoa = btoa || ((value: any) => value);
+const my_atob = atob || ((value: any) => value);
+
 class WebStorage {
 
     public namespace?: string;
     public store: Storage;
+    private base64Encrypt: boolean = false;
 
     /**
      * WebStorage Constructor
@@ -19,6 +23,21 @@ class WebStorage {
 
         this.namespace = namespace;
 
+        return this;
+    }
+
+
+    /**
+     * Enable Base64Encrypt
+     */
+    enabledBase64Encryption() {
+        try {
+            if (!atob || !btoa) return this;
+        } catch {
+            return this;
+        }
+
+        this.base64Encrypt = true;
         return this;
     }
 
@@ -51,7 +70,7 @@ class WebStorage {
      * @returns {WebStorage}
      */
     set(key: string, value: any) {
-        this.store.setItem(this.n(key), value);
+        this.store.setItem(this.n(key), this.base64Encrypt ? my_btoa(value) : value);
         return this;
     }
 
@@ -116,7 +135,7 @@ class WebStorage {
     get<T = any>(key: string, def?: T): T {
         const value: any = this.store.getItem(this.n(key));
         if (value === null) return def as T;
-        return value as T;
+        return (this.base64Encrypt ? my_atob(value) : value) as T;
     }
 
     /**
