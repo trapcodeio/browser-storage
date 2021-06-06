@@ -14,6 +14,7 @@
 
 <script>
     const store = BrowserStorage.getSessionStore('app');
+    // Enable Base64Encryption
     store.enabledBase64Encryption();
 
     store.setObject('object', {foo: 'bar'});
