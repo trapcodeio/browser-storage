@@ -2,7 +2,7 @@
  * This is an extension of the Trapcode.io Browser Storage for VUE.
  */
 import {isRef, ref, watch} from "vue";
-import WebStorage from "./WebStorage";
+import WebStorage from "./src/WebStorage";
 
 class VueWebStorageError extends Error {
     constructor(message: string) {
