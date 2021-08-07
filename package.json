@@ -3,7 +3,7 @@
   "version": "2.1.2",
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsc && rollup ./index.js --file ./browser.js --format iife"
+    "build": "tsc && rollup ./dist/index.js --file ./dist/browser.js --format iife"
   },
   "description": "Support all browser storage using one Api",
   "main": "js/index.js",
@@ -13,7 +13,8 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "rollup": "^2.44.0",
-    "typescript": "^4.2.3"
+    "rollup": "^2.56.0",
+    "typescript": "^4.3.5",
+    "vue": "^3.1.5"
   }
 }
