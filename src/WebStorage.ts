@@ -16,9 +16,9 @@ class WebStorage {
      */
     constructor(type = "local", namespace?: string) {
         if (type === 'session') {
-            this.store = sessionStorage;
+            this.store = window.sessionStorage;
         } else {
-            this.store = localStorage;
+            this.store = window.localStorage;
         }
 
         this.namespace = namespace;
