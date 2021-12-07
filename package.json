@@ -2,7 +2,7 @@
   "name": "@trapcode/browser-storage",
   "version": "2.2.2",
   "scripts": {
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "build": "tsc && rollup ./index.js --file ./browser.js --format iife"
   },
   "description": "Support all browser storage using one Api",
