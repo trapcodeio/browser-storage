@@ -74,8 +74,8 @@ class VueWebStorage extends WebStorage {
         return persistToStorage(this, set);
     }
 
-    persistedRef<T>(key: string, value?: T) {
-        return persistedRefFromStorage<T>(this, key, value);
+    persistedRef<T>(key: string, value?: T, reset?: boolean = false) {
+        return persistedRefFromStorage<T>(this, key, value, reset);
     }
 }
 
@@ -104,8 +104,8 @@ function persistToStorage(store: VueWebStorage, set: Record<string, any>) {
     return store;
 }
 
-function persistedRefFromStorage<T>(store: VueWebStorage, key: string, value?: T) {
-    const thisRef = ref<T | undefined>(value || store.getAsType(key, value));
+function persistedRefFromStorage<T>(store: VueWebStorage, key: string, value?: T, reset?: boolean) {
+    const thisRef = ref<T | undefined>(reset ? value : store.getAsType(key, value));
     store.persist({[key]: thisRef});
     return thisRef;
 }
