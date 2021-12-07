@@ -6,8 +6,8 @@
     "build": "tsc && rollup ./index.js --file ./browser.js --format iife"
   },
   "description": "Support all browser storage using one Api",
-  "main": "js/index.js",
-  "types": "js/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "repository": "https://github.com/trapcodeio/browser-storage.git",
   "author": "trapcodeio",
   "license": "MIT",

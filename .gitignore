@@ -107,4 +107,5 @@ dist
 
 .idea
 
-js
+*.js
+*.d.ts

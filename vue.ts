@@ -105,7 +105,7 @@ function persistToStorage(store: VueWebStorage, set: Record<string, any>) {
 }
 
 function persistedRefFromStorage<T>(store: VueWebStorage, key: string, value?: T) {
-    const thisRef = ref<T | undefined>(store.getAsType(key, value));
+    const thisRef = ref<T | undefined>(value || store.getAsType(key, value));
     store.persist({[key]: thisRef});
     return thisRef;
 }
