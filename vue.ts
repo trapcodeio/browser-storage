@@ -74,14 +74,14 @@ class VueWebStorage extends WebStorage {
         return persistToStorage(this, set);
     }
 
-    persistedRef<T>(key: string, value?: T, reset: boolean = false) {
+    persistedRef<T>(key: string, value?: T) {
         // Make ref
-        const r = ref(value);
+        const r = ref(this.getAsType<T>(key, value));
 
         // Watch for changes
         watch(r, (value: any) => {
             this.setAsType(key, value);
-        });
+        }, {immediate: true});
 
         // return ref
         return r;
@@ -89,7 +89,7 @@ class VueWebStorage extends WebStorage {
 
     persistedReactive<T extends object>(key: string, value: T) {
         // Make Reactive
-        const r = reactive(value);
+        const r = reactive(this.getAsType<T>(key, value));
 
         // Watch Reactive
         watch(r, (v) => {
