@@ -1,7 +1,7 @@
 /**
  * This is an extension of the Trapcode.io Browser Storage for VUE.
  */
-import {isRef, ref, watch} from "vue";
+import {isRef, reactive, ref, watch} from "vue";
 import WebStorage from "./src/WebStorage";
 
 class VueWebStorageError extends Error {
@@ -75,7 +75,29 @@ class VueWebStorage extends WebStorage {
     }
 
     persistedRef<T>(key: string, value?: T, reset: boolean = false) {
-        return persistedRefFromStorage<T>(this, key, value, reset);
+        // Make ref
+        const r = ref(value);
+
+        // Watch for changes
+        watch(r, (value: any) => {
+            this.setAsType(key, value);
+        });
+
+        // return ref
+        return r;
+    }
+
+    persistedReactive<T extends object>(key: string, value: T) {
+        // Make Reactive
+        const r = reactive(value);
+
+        // Watch Reactive
+        watch(r, (v) => {
+            this.setAsType(key, v || value);
+        }, {immediate: true});
+
+        // Return Reactive
+        return r;
     }
 }
 
