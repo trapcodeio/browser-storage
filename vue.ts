@@ -16,6 +16,7 @@ class VueWebStorage extends WebStorage {
 
     constructor(type: string, namespace?: string, enableBase64Encryption: boolean = false) {
         super(type, namespace);
+
         this.enableBase64Encryption(enableBase64Encryption);
 
         let types: any = this.getObject("__types__", {});
@@ -133,7 +134,7 @@ function persistedRefFromStorage<T>(store: VueWebStorage, key: string, value?: T
 }
 
 export function vueLocalStorage(namespace?: string, enableBase64Encryption?: boolean) {
-    return new VueWebStorage("local", namespace);
+    return new VueWebStorage("local", namespace, enableBase64Encryption);
 }
 
 export function vueSessionStorage(namespace?: string, enableBase64Encryption?: boolean) {
