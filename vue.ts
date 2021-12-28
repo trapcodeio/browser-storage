@@ -71,10 +71,52 @@ class VueWebStorage extends WebStorage {
         }
     }
 
+    /**
+     * Persist multiple values to refs
+     * @param set
+     * @example
+     * const appName = ref("Name");
+     * const appVersion = ref("Version");
+     *
+     * storage.persist({appName, appVersion});
+     */
     persist(set: Record<string, any>) {
-        return persistToStorage(this, set);
+        if (isRef(set))
+            return console.warn(new VueWebStorageError(`persist must be an object not a ref!`));
+
+        Object.entries(set).forEach(([key, val]) => {
+            if (!isRef(val)) {
+                return console.warn(
+                    new VueWebStorageError(`Persist object value must be a type of vue <Ref>`)
+                );
+            }
+
+            if (val.value === undefined) {
+                val.value = this.getAsType(key);
+
+                if (val.value === undefined) this.remove(key);
+            } else {
+                this.setAsType(key, val.value);
+            }
+
+            watch(val, (n: any) => (n === undefined ? this.remove(key) : this.setAsType(key, n)));
+        });
+
+        return this;
     }
 
+    /**
+     * Sync ref with storage value
+     * @param key
+     * @param value
+     *
+     * @example
+     * const appName = storage.persistRef("appName", "Name");
+     *
+     * appName.value = "New Name";
+     *
+     * storage.get("appName") // "New Name"
+     */
     persistedRef<T>(key: string, value?: T) {
         // Make ref
         const r = ref(this.getAsType<T>(key, value));
@@ -88,6 +130,21 @@ class VueWebStorage extends WebStorage {
         return r;
     }
 
+    /**
+     * Sync reactive with storage value
+     * @param key
+     * @param value
+     *
+     * @example
+     * const config = storage.persistReactive("config", {
+     *  appName: "Name",
+     *  appVersion: "Version"
+     * });
+     *
+     * config.name = "New Name";
+     *
+     * storage.get("config") // {appName: "New Name", appVersion: "Version"}
+     */
     persistedReactive<T extends object>(key: string, value: T) {
         // Make Reactive
         const r = reactive(this.getAsType<T>(key, value));
@@ -100,37 +157,6 @@ class VueWebStorage extends WebStorage {
         // Return Reactive
         return r;
     }
-}
-
-function persistToStorage(store: VueWebStorage, set: Record<string, any>) {
-    if (isRef(set))
-        return console.warn(new VueWebStorageError(`persist must be an object not a ref!`));
-
-    Object.entries(set).forEach(([key, val]) => {
-        if (!isRef(val)) {
-            return console.warn(
-                new VueWebStorageError(`Persist object value must be a type of vue <Ref>`)
-            );
-        }
-
-        if (val.value === undefined) {
-            val.value = store.getAsType(key);
-
-            if (val.value === undefined) store.remove(key);
-        } else {
-            store.setAsType(key, val.value);
-        }
-
-        watch(val, (n: any) => (n === undefined ? store.remove(key) : store.setAsType(key, n)));
-    });
-
-    return store;
-}
-
-function persistedRefFromStorage<T>(store: VueWebStorage, key: string, value?: T, reset?: boolean) {
-    const thisRef = ref<T | undefined>(reset ? value : store.getAsType(key, value));
-    store.persist({[key]: thisRef});
-    return thisRef;
 }
 
 export function vueLocalStorage(namespace?: string, enableBase64Encryption?: boolean) {
