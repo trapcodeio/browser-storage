@@ -145,7 +145,7 @@ class VueWebStorage extends WebStorage {
      *
      * storage.get("config") // {appName: "New Name", appVersion: "Version"}
      */
-    persistedReactive<T extends object>(key: string, value: T) {
+    persistedReactive<T extends object>(key: string, value: T = {} as T) {
         // Make Reactive
         const r = reactive(this.getAsType<T>(key, value));
 
