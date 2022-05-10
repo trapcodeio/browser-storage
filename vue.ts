@@ -13,17 +13,18 @@ class VueWebStorageError extends Error {
 
 class VueWebStorage extends WebStorage {
     private readonly types: Record<string, string> = {};
+    private typesKey: string = "__types__"
 
     constructor(type: string, namespace?: string, enableBase64Encryption: boolean = false) {
         super(type, namespace);
 
         this.enableBase64Encryption(enableBase64Encryption);
 
-        let types: any = this.getObject("__types__", {});
+        let types: any = this.getObject(this.typesKey, {});
         if (typeof types === "string") {
             // Encryption maybe enabled late.
             this.enableBase64Encryption();
-            types = this.getObject("__types__", {});
+            types = this.getObject(this.typesKey, {});
             this.enableBase64Encryption(false);
         }
 
@@ -32,8 +33,22 @@ class VueWebStorage extends WebStorage {
 
     private setType(key: string, type: string) {
         this.types[key] = type;
-        super.setObject("__types__", this.types);
+        super.setObject(this.typesKey, this.types);
         return this;
+    }
+
+    private removeType(key: string) {
+        if (this.types.hasOwnProperty(key)) {
+            delete this.types[key];
+            super.setObject(this.typesKey, this.types);
+        }
+
+        return this;
+    }
+
+    remove(key: string): this {
+        this.removeType(key);
+        return super.remove(key);
     }
 
     setAsType(key: string, value: any): this {
