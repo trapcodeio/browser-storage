@@ -31,12 +31,23 @@ class VueWebStorage extends WebStorage {
         this.types = types;
     }
 
+    /**
+     * Set Type
+     * @param key
+     * @param type
+     * @private
+     */
     private setType(key: string, type: string) {
         this.types[key] = type;
         super.setObject(this.typesKey, this.types);
         return this;
     }
 
+    /**
+     * Remove type from types.
+     * @param key
+     * @private
+     */
     private removeType(key: string) {
         if (this.types.hasOwnProperty(key)) {
             delete this.types[key];
@@ -46,12 +57,13 @@ class VueWebStorage extends WebStorage {
         return this;
     }
 
-    remove(key: string): this {
-        this.removeType(key);
-        return super.remove(key);
-    }
-
-    setAsType(key: string, value: any): this {
+    /**
+     * Set value as type of itself.
+     * @param key
+     * @param value
+     * @private
+     */
+    private setAsType(key: string, value: any): this {
         const type = typeof value;
 
         switch (type) {
@@ -70,7 +82,13 @@ class VueWebStorage extends WebStorage {
         }
     }
 
-    getAsType<T>(key: string, def?: T): T {
+    /**
+     * Get value as saved type.
+     * @param key
+     * @param def
+     * @private
+     */
+    private getAsType<T>(key: string, def?: T): T {
         const type = this.types[key];
         switch (type) {
             case "boolean":
@@ -85,6 +103,16 @@ class VueWebStorage extends WebStorage {
                 return super.get(key, def) as unknown as T;
         }
     }
+
+    /**
+     * Remove key and types associated with it.
+     * @param key
+     */
+    remove(key: string): this {
+        this.removeType(key);
+        return super.remove(key);
+    }
+
 
     /**
      * Persist multiple values to refs
@@ -171,6 +199,17 @@ class VueWebStorage extends WebStorage {
 
         // Return Reactive
         return r;
+    }
+
+    /**
+     * A helper to rename the types key.
+     * @param key
+     */
+    $renameTypesKey(key: string) {
+        if (!key || (key && !key.length)) throw new VueWebStorageError(`New TypesKey must be a valid string!`);
+
+        this.typesKey = key;
+        return this;
     }
 }
 
